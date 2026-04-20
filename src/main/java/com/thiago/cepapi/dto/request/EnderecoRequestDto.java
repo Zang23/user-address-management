@@ -8,10 +8,6 @@ import lombok.Setter;
 public class EnderecoRequestDto {
     
     private String cep;
-    private String rua;
-    private String estado;
-    private String cidade;
-    private String bairro;
     private String numero;
 
     public EnderecoRequestDto(){}

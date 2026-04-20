@@ -25,6 +25,8 @@ public class EnderecoResponseDto {
     
     private String bairro;
 
+    private Boolean erro;
+
     
     public EnderecoResponseDto(Endereco endereco) {
         this.cep = endereco.getCep();
@@ -34,5 +36,7 @@ public class EnderecoResponseDto {
         this.bairro = endereco.getBairro();
         this.numero = endereco.getNumero();
     }
+
+    public EnderecoResponseDto(){}
 
 }

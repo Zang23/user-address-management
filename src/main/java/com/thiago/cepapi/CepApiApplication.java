@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import com.thiago.cepapi.dto.response.EnderecoResponseDto;
-import com.thiago.cepapi.service.CEPService;
+import com.thiago.cepapi.service.CadastroService;
 
 @SpringBootApplication
 public class CepApiApplication {
