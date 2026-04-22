@@ -1,0 +1,185 @@
+/* Variáveis para facilitar a manutenção */
+:root {
+  --bg-color: #37353E;
+  --container-bg: #44444E;
+  --accent-color: #715A5A;
+  --text-color: #D3DAD9;
+  --input-border: #5a5a66;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 500px; /* Reduzi um pouco para ficar mais elegante em formulários */
+  width: 90%;
+  background: var(--container-bg);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+h2, h3 {
+  margin-top: 0;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+h3 {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--accent-color);
+  padding-bottom: 5px;
+}
+
+/* Inputs Estilizados */
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background-color: var(--bg-color);
+  color: white;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+input::placeholder {
+  color: #888;
+}
+
+/* Botões */
+button {
+  margin-right: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--accent-color);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s active;
+}
+
+button:hover {
+  filter: brightness(1.2);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Botão de Voltar (mais sutil) */
+button:nth-of-type(2) {
+  background-color: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--text-color);
+}
+
+
+/* Botão de Excluir (Danger) */
+button.danger {
+  background-color: #A65D5D; /* Um vermelho mais suave e profissional */
+  color: #fff;
+  border: none;
+}
+
+button.danger:hover {
+  background-color: #BC6C6C; /* Clareia levemente no hover */
+  box-shadow: 0 4px 12px rgba(166, 93, 93, 0.3);
+}
+
+/* Opcional: Se quiser que ele tenha um estilo mais discreto como o "Voltar" */
+button.danger-outline {
+  background-color: transparent;
+  border: 1px solid #A65D5D;
+  color: #A65D5D;
+}
+
+button.danger-outline:hover {
+  background-color: #A65D5D;
+  color: white;
+}
+
+.header-secao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.btn-adicionar {
+  background-color: transparent;
+  border: 1px dashed var(--text-color);
+  color: var(--text-color);
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.endereco-item {
+  background-color: var(--bg-color);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--accent-color);
+}
+
+.endereco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.actions {
+  margin-top: 30px;
+  border-top: 1px solid var(--input-border);
+  padding-top: 20px;
+}
+
+/* Feedbacks */
+.toast {
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+
+
+.success { background-color: #4e6e4f; color: #d4edda; }
+.error { background-color: #8b4343; color: #f8d7da; }
+
+.spinner {
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

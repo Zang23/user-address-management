@@ -1,0 +1,19 @@
+<div class="container">
+    <div *ngIf="loading" class="spinner">
+    Carregando...
+    </div>
+    <h1>Usuários</h1>
+
+    <button (click)="irCadastro()">Novo Usuário</button>
+
+    <div *ngFor="let u of usuarios" class="card">
+    <strong>{{ u.nome }}</strong><br>
+    {{ u.email }}
+
+    <div style="margin-top:10px;">
+        <button (click)="verDetalhe(u.id)">Ver</button>
+        <button (click)="editar(u.id)">Editar</button>
+        <button class="danger" (click)="deletar(u.id)">Excluir</button>
+    </div>
+    </div>
+</div>

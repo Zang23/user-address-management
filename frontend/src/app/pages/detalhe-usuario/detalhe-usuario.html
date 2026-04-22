@@ -1,0 +1,16 @@
+<div class="container" *ngIf="usuario">
+  <h2>Detalhes do usuário</h2>
+
+  <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+  <p><strong>Email:</strong> {{ usuario.email }}</p>
+
+  <h3>Endereços</h3>
+
+  <div *ngFor="let e of usuario.enderecos" class="card">
+    <p><strong>CEP:</strong> {{ e.cep }}</p>
+    <p><strong>Logradouro:</strong> {{ e.logradouro }}</p>
+    <p><strong>Número:</strong> {{ e.numero }}</p>
+  </div>
+
+  <button (click)="voltar()">Voltar</button>
+</div>

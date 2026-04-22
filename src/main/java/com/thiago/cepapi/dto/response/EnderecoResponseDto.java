@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 public class EnderecoResponseDto {
     
+    private Long id;
     private String cep;
 
     @JsonProperty("logradouro")
@@ -29,6 +30,7 @@ public class EnderecoResponseDto {
 
     
     public EnderecoResponseDto(Endereco endereco) {
+        this.id = endereco.getId();
         this.cep = endereco.getCep();
         this.rua = endereco.getRua();
         this.cidade = endereco.getCidade();

@@ -32,18 +32,24 @@ public class CadastroService {
 
     public UsuarioResponseDto cadastrarUsuario(UsuarioRequestDto dto){
 
+        Usuario usuario = new Usuario(dto.getNome(), dto.getEmail(), dto.getTelefone());
 
-        Endereco endereco = cadastrarEndereco(dto.getEndereco());
+        List<Endereco> enderecos = new ArrayList<>();
 
-        Usuario user = new Usuario(dto.getNome(), dto.getEmail(), dto.getTelefone());
-        user.setEndereco(endereco);
+        for(EnderecoRequestDto enderecoDto : dto.getEnderecos()){
+            Endereco endereco = cadastrarEndereco(enderecoDto);
 
-        Usuario salvo = usuarioRepository.save(user);
-        
-        
-        UsuarioResponseDto userDto = new UsuarioResponseDto(salvo, salvo.getEndereco()); 
-        return userDto;
-    }
+            endereco.setUsuario(usuario); 
+
+            enderecos.add(endereco);
+        }
+
+        usuario.setEnderecos(enderecos);
+
+        Usuario salvo = usuarioRepository.save(usuario);
+
+        return new UsuarioResponseDto(salvo);
+    }   
 
 
     private Endereco cadastrarEndereco(EnderecoRequestDto dto) {
@@ -86,9 +92,9 @@ public class CadastroService {
         List<Usuario> usuarios = usuarioRepository.findAll();
         List<UsuarioResponseDto> resposta = new ArrayList<>();
 
-        for(Usuario user : usuarios){
+        for(Usuario usuario : usuarios){
 
-            resposta.add(new UsuarioResponseDto(user, user.getEndereco()));
+            resposta.add(new UsuarioResponseDto(usuario));
 
         }
 
@@ -100,40 +106,79 @@ public class CadastroService {
         
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado"));
 
-        return new UsuarioResponseDto(usuario, usuario.getEndereco());
+        return new UsuarioResponseDto(usuario);
         
     }
 
 
     public UsuarioResponseDto atualizarUsuario(Long id, UsuarioRequestDto dto) {
-        
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado"));
 
-        usuario.setNome(dto.getNome());
-        usuario.setEmail(dto.getEmail());
-        usuario.setTelefone(dto.getTelefone());
+    Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado"));
 
-        Endereco endereco = usuario.getEndereco();
+    
+    usuario.setNome(dto.getNome());
+    usuario.setEmail(dto.getEmail());
+    usuario.setTelefone(dto.getTelefone());
 
-        if(!validaFormatoCep(dto.getEndereco().getCep())){
+    List<Endereco> enderecosAtuais = usuario.getEnderecos();
+    List<Endereco> novosEnderecos = new ArrayList<>();
+
+    for (EnderecoRequestDto enderecoDto : dto.getEnderecos()) {
+
+        if (!validaFormatoCep(enderecoDto.getCep())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de CEP invalido");
         }
-        
-        endereco.setCep(dto.getEndereco().getCep());
-        endereco.setNumero(dto.getEndereco().getNumero());
 
-        EnderecoResponseDto resposta = cepService.buscarCep(dto.getEndereco().getCep());
+        EnderecoResponseDto resposta = cepService.buscarCep(enderecoDto.getCep());
 
-        endereco.setBairro(resposta.getBairro());
-        endereco.setEstado(resposta.getEstado());
-        endereco.setRua(resposta.getRua());
-        endereco.setCidade(resposta.getCidade());
+        if (enderecoDto.getId() != null) {
 
-        Usuario salvo = usuarioRepository.save(usuario);
+            Endereco existente = null;
 
-        return new UsuarioResponseDto(salvo, salvo.getEndereco());
+            for (Endereco e : enderecosAtuais) {
+                if (e.getId().equals(enderecoDto.getId())) {
+                    existente = e;
+                    break;
+                }
+            }
 
+            if (existente == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "endereco nao encontrado");
+            }
+
+            
+            existente.setCep(enderecoDto.getCep());
+            existente.setNumero(enderecoDto.getNumero());
+            existente.setRua(resposta.getRua());
+            existente.setCidade(resposta.getCidade());
+            existente.setEstado(resposta.getEstado());
+            existente.setBairro(resposta.getBairro());
+
+            novosEnderecos.add(existente);
+
+        } else {
+
+            Endereco novo = new Endereco(
+                enderecoDto.getCep(),
+                resposta.getRua(),
+                enderecoDto.getNumero(),
+                resposta.getEstado(),
+                resposta.getCidade(),
+                resposta.getBairro()
+            );
+
+            novo.setUsuario(usuario);
+            novosEnderecos.add(novo);
+        }
     }
+
+    enderecosAtuais.clear();
+    enderecosAtuais.addAll(novosEnderecos);
+
+    Usuario salvo = usuarioRepository.save(usuario);
+
+    return new UsuarioResponseDto(salvo);
+}
 
 
     public void deletarUsuario(Long id) {

@@ -1,5 +1,7 @@
 package com.thiago.cepapi.dto.request;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,7 @@ public class UsuarioRequestDto {
     private String nome;
     private String email;
     private String telefone;
-    private EnderecoRequestDto endereco;
+    private List<EnderecoRequestDto> enderecos;
 
     public UsuarioRequestDto() {}
 

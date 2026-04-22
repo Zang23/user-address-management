@@ -1,11 +1,13 @@
 package com.thiago.cepapi.entity;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +31,8 @@ public class Usuario {
         this.telefone = telefone;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Endereco endereco;
-
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Endereco> enderecos;
 
     public Usuario(){}
 }

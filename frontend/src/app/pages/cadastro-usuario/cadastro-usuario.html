@@ -1,0 +1,35 @@
+<div class="container">
+    <div *ngIf="mensagem" [ngClass]="tipo" class="toast">
+        {{ mensagem }}
+    </div>
+    
+    <h2>{{ id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h2>
+
+    <label>Dados Pessoais</label>
+    <input [(ngModel)]="novoUsuario.nome" placeholder="Nome">
+    <input [(ngModel)]="novoUsuario.email" placeholder="Email">
+    <input [(ngModel)]="novoUsuario.telefone" placeholder="Telefone">
+
+    <div class="header-secao">
+        <h3>Endereços</h3>
+        <button type="button" class="btn-adicionar" (click)="adicionarEndereco()">+ Adicionar Endereço</button>
+    </div>
+
+    <div *ngFor="let endereco of novoUsuario.enderecos; let i = index" class="endereco-item">
+        <div class="endereco-header">
+            <span>Endereço #{{ i + 1 }}</span>
+            <button *ngIf="novoUsuario.enderecos.length > 1" 
+                    class="danger" 
+                    style="padding: 4px 8px; font-size: 12px;" 
+                    (click)="removerEndereco(i)">Remover</button>
+        </div>
+        
+        <input [(ngModel)]="novoUsuario.enderecos[i].cep" placeholder="CEP">
+        <input [(ngModel)]="novoUsuario.enderecos[i].numero" placeholder="Número">
+    </div>
+
+    <div class="actions">
+        <button (click)="salvar()">Salvar</button>
+        <button (click)="voltar()">Voltar</button>
+    </div>
+</div>
