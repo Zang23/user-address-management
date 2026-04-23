@@ -15,7 +15,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 RUN mkdir -p /app/wallet
 
-ENV TNS_ADMIN=/app/wallet
+ENV TNS_ADMIN=/etc/secrets
 
 EXPOSE 8080
 
