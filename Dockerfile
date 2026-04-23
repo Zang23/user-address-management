@@ -1,21 +1,43 @@
-FROM maven:3.9.9-eclipse-temurin-17 AS build
+# =========================
+# ETAPA 1 - BUILD
+# =========================
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
-COPY . .
+
+# Copia arquivos de build
+COPY pom.xml .
+COPY src ./src
+
+# Faz build do projeto
 RUN mvn clean package -DskipTests
 
-FROM gvenzl/oracle-xe:21-slim
 
-ENV ORACLE_PASSWORD=123456
+# =========================
+# ETAPA 2 - RUNTIME
+# =========================
+FROM eclipse-temurin:21-jdk
 
-# copia jar gerado no build
-COPY target/cep-api-0.0.1-SNAPSHOT.jar app.jar
+WORKDIR /app
 
-# copia script
-COPY start.sh /start.sh
+# Copia o JAR gerado
+COPY --from=build /app/target/*.jar app.jar
 
-RUN chmod +x /start.sh
+# =========================
+# ORACLE WALLET (IMPORTANTE)
+# =========================
+# se você colocar o wallet dentro do projeto:
+COPY src/main/resources/wallet /app/wallet
 
+# aponta o Oracle JDBC para o wallet
+ENV TNS_ADMIN=/app/wallet
+
+# =========================
+# PORTA DO RENDER
+# =========================
 EXPOSE 8080
 
-CMD ["/start.sh"]
+# =========================
+# START DA APLICAÇÃO
+# =========================
+ENTRYPOINT ["java", "-jar", "app.jar"]
