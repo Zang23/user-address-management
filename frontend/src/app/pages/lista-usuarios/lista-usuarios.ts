@@ -11,6 +11,7 @@ import { delay, finalize } from 'rxjs/operators';
   imports: [CommonModule],
   templateUrl: './lista-usuarios.html'
 })
+
 export class ListaUsuarios implements OnInit {
 
   usuarios: any[] = [];

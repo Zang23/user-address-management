@@ -6,9 +6,9 @@
     <h2>{{ id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h2>
 
     <label>Dados Pessoais</label>
-    <input [(ngModel)]="novoUsuario.nome" placeholder="Nome">
-    <input [(ngModel)]="novoUsuario.email" placeholder="Email">
-    <input [(ngModel)]="novoUsuario.telefone" placeholder="Telefone">
+    <input [(ngModel)]="novoUsuario.nome" placeholder="Nome" required>
+    <input type="email" [(ngModel)]="novoUsuario.email" placeholder="Email">
+    <input [(ngModel)]="novoUsuario.telefone" placeholder="Telefone (DDD + Numero)" maxlength="11">
 
     <div class="header-secao">
         <h3>Endereços</h3>
