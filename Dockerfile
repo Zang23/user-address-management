@@ -1,9 +1,15 @@
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
 FROM gvenzl/oracle-xe:21-slim
 
 ENV ORACLE_PASSWORD=123456
 
-# copia jar
-COPY target/*.jar /app.jar
+# copia jar gerado no build
+COPY --from=build /app/target/*.jar /app.jar
 
 # copia script
 COPY start.sh /start.sh
