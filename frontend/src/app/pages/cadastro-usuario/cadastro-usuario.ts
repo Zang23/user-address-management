@@ -79,18 +79,7 @@ export class CadastroUsuario {
           this.mostrarMensagem('Usuário atualizado com sucesso!', 'success');
           this.salvando = false;
           this.router.navigate(['/']);
-        },
-        error: (err) => {
-          const mensagemBackend = typeof err.error === 'string' ? err.error : null;
-
-          if (mensagemBackend) {
-            this.mostrarMensagem(mensagemBackend, 'error');
-          } else {
-            this.mostrarMensagem('Erro ao salvar usuario', 'error');
-          }
-
-          this.salvando = false;
-        } 
+        }
       });
     } else {
       this.service.criar(this.novoUsuario).subscribe({
@@ -99,17 +88,6 @@ export class CadastroUsuario {
           this.salvando = false;
           this.router.navigate(['/']);
         },
-        error: (err) => {
-          const mensagemBackend = typeof err.error === 'string' ? err.error : null;
-
-          if (mensagemBackend) {
-            this.mostrarMensagem(mensagemBackend, 'error');
-          } else {
-            this.mostrarMensagem('Erro ao criar usuário', 'error');
-          }
-
-          this.salvando = false;
-        }
       });
     }
   }
