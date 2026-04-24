@@ -1,8 +1,7 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -10,13 +9,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideHttpClient(
-      withInterceptorsFromDi()
-    ),
-
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpErrorInterceptor,
-      multi: true
-    }
+      withInterceptors([HttpErrorInterceptor])
+    )
   ]
 };

@@ -1,42 +1,32 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpEvent,
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 
-@Injectable()
-export class HttpErrorInterceptor implements HttpInterceptor {
+export const HttpErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
-  constructor(private toast: ToastService) {}
+  const toast = inject(ToastService);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
-      catchError((err: HttpErrorResponse) => {
+  return next(req).pipe(
+    catchError((err: HttpErrorResponse) => {
 
-        let mensagem = 'Erro inesperado';
+      let mensagem = 'Erro inesperado';
 
-        const backend = err.error;
+      const backend = err.error;
 
-        if (typeof backend === 'string') {
-          mensagem = backend;
-        } 
-        else if (backend?.message) {
-          mensagem = backend.message;
-        } 
-        else if (backend?.error) {
-          mensagem = backend.error;
-        }
+      if (typeof backend === 'string') {
+        mensagem = backend;
+      } 
+      else if (backend?.message) {
+        mensagem = backend.message;
+      } 
+      else if (backend?.error) {
+        mensagem = backend.error;
+      }
 
-        this.toast.show(mensagem, 'error');
+      toast.show(mensagem, 'error');
 
-        return throwError(() => err);
-      })
-    );
-  }
-}
+      return throwError(() => err);
+    })
+  );
+};
