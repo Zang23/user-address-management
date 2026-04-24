@@ -80,7 +80,7 @@ public class CadastroService {
     }
 
 
-    private boolean validaFormatoCep(String cep) {
+    public boolean validaFormatoCep(String cep) {
         
         if(cep == null){
             return false;
