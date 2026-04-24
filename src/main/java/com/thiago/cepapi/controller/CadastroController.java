@@ -20,7 +20,7 @@ import com.thiago.cepapi.dto.response.UsuarioResponseDto;
 import com.thiago.cepapi.service.CadastroService;
 
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/usuarios")
 public class CadastroController {
