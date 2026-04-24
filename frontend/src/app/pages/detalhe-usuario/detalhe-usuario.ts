@@ -44,6 +44,7 @@ export class DetalheUsuario implements OnInit {
       next: (res) => {
         this.usuario = res;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         const mensagemBackend = typeof err.error === 'string' ? err.error : null;
