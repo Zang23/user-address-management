@@ -3,6 +3,7 @@ package com.thiago.cepapi.service;
 import org.springframework.stereotype.Service;
 
 import com.thiago.cepapi.client.CEPClient;
+import com.thiago.cepapi.dto.response.CepApiResponse;
 import com.thiago.cepapi.dto.response.EnderecoResponseDto;
 import com.thiago.cepapi.exception.CepInvalidoException;
 
@@ -20,13 +21,22 @@ public class CEPService {
 
         try{
 
-            EnderecoResponseDto resposta = cepClient.buscarCep(cep);
+            CepApiResponse resposta = cepClient.buscarCep(cep);
 
             if(resposta == null || Boolean.TRUE.equals(resposta.getErro())){
                 throw new CepInvalidoException();
             }
 
-            return resposta;
+            EnderecoResponseDto dto  = new EnderecoResponseDto();
+
+            dto.setCep(resposta.getCep());
+            dto.setRua(resposta.getLogradouro());
+            dto.setCidade(resposta.getLocalidade());
+            dto.setEstado(resposta.getUf());
+            dto.setBairro(resposta.getBairro());
+
+
+            return dto;
             
         }catch(CepInvalidoException e){
             throw e;

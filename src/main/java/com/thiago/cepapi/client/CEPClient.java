@@ -3,7 +3,8 @@ package com.thiago.cepapi.client;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.thiago.cepapi.dto.response.EnderecoResponseDto;
+import com.thiago.cepapi.dto.response.CepApiResponse;
+
 
 @Component
 public class CEPClient {
@@ -14,11 +15,11 @@ public class CEPClient {
         this.webClient = webClient;
     }
 
-    public EnderecoResponseDto buscarCep(String cep) {
+    public CepApiResponse buscarCep(String cep) {
         return webClient.get()
                 .uri("/ws/{cep}/json/", cep)
                 .retrieve()
-                .bodyToMono(EnderecoResponseDto.class)
+                .bodyToMono(CepApiResponse.class)
                 .block();
     }
 }

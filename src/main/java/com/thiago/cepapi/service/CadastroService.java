@@ -129,6 +129,13 @@ public class CadastroService {
 
     Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
+    if(usuarioRepository.existsByEmail(dto.getEmail()) && !usuario.getEmail().equals(dto.getEmail())) {
+        throw new DuplicidadeException("Email ja cadastrado");
+    }
+
+    if(usuarioRepository.existsByTelefone(dto.getTelefone()) && !usuario.getTelefone().equals(dto.getTelefone())) {
+        throw new DuplicidadeException("Telefone ja cadastrado");
+    }
     
     usuario.setNome(dto.getNome());
     usuario.setEmail(dto.getEmail());
