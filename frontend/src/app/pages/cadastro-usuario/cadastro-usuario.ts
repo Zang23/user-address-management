@@ -75,7 +75,7 @@ export class CadastroUsuario {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          const mensagemBackend = err.error;
+          const mensagemBackend = typeof err.error === 'string' ? err.error : null;
 
           if(mensagemBackend){
             this.mostrarMensagem(mensagemBackend, 'error');
@@ -90,8 +90,14 @@ export class CadastroUsuario {
           this.mostrarMensagem('Usuário criado com sucesso!', 'success');
           this.router.navigate(['/']);
         },
-        error: () => {
-          this.mostrarMensagem('Erro ao criar usuário', 'error');
+        error: (err) => {
+          const mensagemBackend = typeof err.error === 'string' ? err.error : null;
+
+          if (mensagemBackend) {
+            this.mostrarMensagem(mensagemBackend, 'error');
+          } else {
+            this.mostrarMensagem('Erro ao criar usuário', 'error');
+          }
         }
       });
     }
