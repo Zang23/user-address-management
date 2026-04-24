@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
-import { finalize } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -36,33 +36,32 @@ export class DetalheUsuario implements OnInit {
   }
 
   ngOnInit() {
-  const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-  this.loading = true;
+    this.loading = true;
 
-  this.service.buscarPorId(id).pipe(
-    finalize(() => {
-      this.loading = false;
-    })
-  ).subscribe({
-    next: (res) => {
-      this.usuario = res;
-    },
-    error: (err) => {
-      const mensagemBackend = typeof err.error === 'string' ? err.error : null;
+    this.service.buscarPorId(id).subscribe({
+      next: (res) => {
+        this.usuario = res;
+        this.loading = false;
+      },
+      error: (err) => {
+        const mensagemBackend = typeof err.error === 'string' ? err.error : null;
 
-      if (mensagemBackend) {
-        this.mostrarMensagem(mensagemBackend, 'error');
-      } else {
-        this.mostrarMensagem('Erro ao carregar usuário', 'error');
+        if (mensagemBackend) {
+          this.mostrarMensagem(mensagemBackend, 'error');
+        } else {
+          this.mostrarMensagem('Erro ao carregar usuário', 'error');
+        }
+
+        this.loading = false;
+
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 2000);
       }
-
-      setTimeout(() => {
-        this.router.navigate(['/']);
-      }, 2000);
-    }
-  });
-}
+    });
+  }
   voltar() {
     this.router.navigate(['/']);
   }
