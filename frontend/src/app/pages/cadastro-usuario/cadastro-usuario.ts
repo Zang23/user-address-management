@@ -16,6 +16,8 @@ export class CadastroUsuario {
   mensagem = '';
   tipo = '';
 
+  salvando = false;
+
   novoUsuario: any = {
     nome: '',
     email: '',
@@ -29,6 +31,7 @@ export class CadastroUsuario {
     private service: UsuarioService,
     private router: Router,
     private route: ActivatedRoute
+    
   ) {}
 
   validarCampos(): boolean {
@@ -64,30 +67,36 @@ export class CadastroUsuario {
 
   salvar() {
 
-    if (!this.validarCampos()) {
+    if (!this.validarCampos() || this.salvando) {
       return; 
-    } 
+    }
+
+    this.salvando = true;
 
     if (this.id) {
       this.service.atualizar(this.id, this.novoUsuario).subscribe({
         next: () => {
           this.mostrarMensagem('Usuário atualizado com sucesso!', 'success');
+          this.salvando = false;
           this.router.navigate(['/']);
         },
         error: (err) => {
           const mensagemBackend = typeof err.error === 'string' ? err.error : null;
 
-          if(mensagemBackend){
+          if (mensagemBackend) {
             this.mostrarMensagem(mensagemBackend, 'error');
-          }else{
-           this.mostrarMensagem('Erro ao salvar usuario', 'error'); 
+          } else {
+            this.mostrarMensagem('Erro ao salvar usuario', 'error');
           }
+
+          this.salvando = false;
         } 
       });
     } else {
       this.service.criar(this.novoUsuario).subscribe({
         next: () => {
           this.mostrarMensagem('Usuário criado com sucesso!', 'success');
+          this.salvando = false;
           this.router.navigate(['/']);
         },
         error: (err) => {
@@ -98,6 +107,8 @@ export class CadastroUsuario {
           } else {
             this.mostrarMensagem('Erro ao criar usuário', 'error');
           }
+
+          this.salvando = false;
         }
       });
     }
