@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from './services/usuario.service';
 import { RouterOutlet } from '@angular/router';
+import { ToastComponent } from './shared/toast/toast.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet],
+  imports: [CommonModule, FormsModule, RouterOutlet, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
