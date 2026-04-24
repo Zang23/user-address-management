@@ -13,7 +13,13 @@ import com.thiago.cepapi.dto.response.EnderecoResponseDto;
 import com.thiago.cepapi.dto.response.UsuarioResponseDto;
 import com.thiago.cepapi.entity.Endereco;
 import com.thiago.cepapi.entity.Usuario;
+import com.thiago.cepapi.exception.CepFormatoInvalidoException;
+import com.thiago.cepapi.exception.DuplicidadeException;
+import com.thiago.cepapi.exception.RecursoNaoEncontradoException;
 import com.thiago.cepapi.repository.UsuarioRepository;
+
+import oracle.security.o3logon.a;
+
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -31,6 +37,14 @@ public class CadastroService {
 
 
     public UsuarioResponseDto cadastrarUsuario(UsuarioRequestDto dto){
+
+        if(usuarioRepository.existsByEmail(dto.getEmail())){
+            throw new DuplicidadeException("Email ja cadastrado");
+        }
+
+        if(usuarioRepository.existsByTelefone(dto.getTelefone())){
+            throw new DuplicidadeException("Telfone ja cadastrado");
+        }
 
         Usuario usuario = new Usuario(dto.getNome(), dto.getEmail(), dto.getTelefone());
 
@@ -55,7 +69,7 @@ public class CadastroService {
     private Endereco cadastrarEndereco(EnderecoRequestDto dto) {
             
         if(!validaFormatoCep(dto.getCep())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de CEP invalido");
+            throw new CepFormatoInvalidoException();
         }
 
         EnderecoResponseDto resposta = cepService.buscarCep(dto.getCep());
@@ -104,7 +118,7 @@ public class CadastroService {
 
     public UsuarioResponseDto buscarUsuarioId(Long id) {
         
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado"));
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         return new UsuarioResponseDto(usuario);
         
@@ -113,7 +127,7 @@ public class CadastroService {
 
     public UsuarioResponseDto atualizarUsuario(Long id, UsuarioRequestDto dto) {
 
-    Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado"));
+    Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
     
     usuario.setNome(dto.getNome());
@@ -126,7 +140,7 @@ public class CadastroService {
     for (EnderecoRequestDto enderecoDto : dto.getEnderecos()) {
 
         if (!validaFormatoCep(enderecoDto.getCep())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de CEP invalido");
+            throw new CepFormatoInvalidoException();
         }
 
         EnderecoResponseDto resposta = cepService.buscarCep(enderecoDto.getCep());
@@ -143,7 +157,7 @@ public class CadastroService {
             }
 
             if (existente == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "endereco nao encontrado");
+                throw new RecursoNaoEncontradoException("Endereco nao encontrado");
             }
 
             
@@ -184,7 +198,7 @@ public class CadastroService {
     public void deletarUsuario(Long id) {
         
         if(!usuarioRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario nao encontrado");
+            throw new RecursoNaoEncontradoException("Usuario nao encontrado");
         }
 
         usuarioRepository.deleteById(id);

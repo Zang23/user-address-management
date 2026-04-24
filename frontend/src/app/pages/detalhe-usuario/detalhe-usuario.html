@@ -1,16 +1,30 @@
-<div class="container" *ngIf="usuario">
-  <h2>Detalhes do usuário</h2>
+<div class="container">
 
-  <p><strong>Nome:</strong> {{ usuario.nome }}</p>
-  <p><strong>Email:</strong> {{ usuario.email }}</p>
-
-  <h3>Endereços</h3>
-
-  <div *ngFor="let e of usuario.enderecos" class="card">
-    <p><strong>CEP:</strong> {{ e.cep }}</p>
-    <p><strong>Logradouro:</strong> {{ e.logradouro }}</p>
-    <p><strong>Número:</strong> {{ e.numero }}</p>
+  <div *ngIf="mensagem" [ngClass]="tipo" class="toast">
+    {{ mensagem }}
   </div>
 
-  <button (click)="voltar()">Voltar</button>
+  <div *ngIf="loading" class="spinner">
+    Carregando usuário...
+  </div>
+
+  <div *ngIf="!loading && usuario">
+
+    <h2>{{ usuario.nome }}</h2>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+    <p><strong>Telefone:</strong> {{ usuario.telefone }}</p>
+
+    <h3>Endereços:</h3>
+
+    <div *ngFor="let e of usuario.enderecos">
+      <p>
+        {{ e.rua }}, {{ e.numero }}<br>
+        {{ e.bairro }} - {{ e.cidade }}/{{ e.estado }}
+      </p>
+    </div>
+
+    <button (click)="voltar()">Voltar</button>
+
+  </div>
+
 </div>

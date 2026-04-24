@@ -15,6 +15,8 @@ import { delay, finalize } from 'rxjs/operators';
 export class ListaUsuarios implements OnInit {
 
   usuarios: any[] = [];
+  mensagem = '';
+  tipo = '';
 
   loading = false;
 
@@ -28,13 +30,20 @@ export class ListaUsuarios implements OnInit {
     this.carregar();
   }
 
+  mostrarMensagem(msg: string, tipo: string) {
+    this.mensagem = msg;
+    this.tipo = tipo;
+
+    setTimeout(() => {
+      this.mensagem = '';
+    }, 3000);
+  }
  
 
   carregar() {
     this.loading = true;
 
     this.service.listar().pipe(
-      // delay(1000), // Remova ou comente esta linha para parar de simular atraso
       finalize(() => {
         this.loading = false;
         this.cdr.detectChanges(); 
@@ -44,7 +53,14 @@ export class ListaUsuarios implements OnInit {
         this.usuarios = res as any[];
       },
       error: (err) => {
-        console.error('Erro ao carregar usuários', err);
+        const mensagemBackend = err.error;
+
+        if(mensagemBackend){
+          this.mostrarMensagem(mensagemBackend, 'error');
+        }else{
+          this.mostrarMensagem('Erro ao carregar usuarios', 'error');
+        }
+
       }
     });
   }
@@ -58,8 +74,20 @@ export class ListaUsuarios implements OnInit {
   }
 
   deletar(id: number) {
-    this.service.deletar(id).subscribe(() => {
-      this.carregar(); 
+    this.service.deletar(id).subscribe({
+      next: () => {
+        this.mostrarMensagem('Usuário deletado com sucesso!', 'success');
+        this.carregar();
+      },
+      error: (err) => {
+        const mensagemBackend = err.error;
+
+        if (mensagemBackend) {
+          this.mostrarMensagem(mensagemBackend, 'error');
+        } else {
+          this.mostrarMensagem('Erro ao deletar usuário', 'error');
+        }
+      }
     });
   }
 

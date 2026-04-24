@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.thiago.cepapi.client.CEPClient;
 import com.thiago.cepapi.dto.response.EnderecoResponseDto;
+import com.thiago.cepapi.exception.CepInvalidoException;
 
 
 @Service
@@ -22,11 +23,13 @@ public class CEPService {
             EnderecoResponseDto resposta = cepClient.buscarCep(cep);
 
             if(resposta == null || Boolean.TRUE.equals(resposta.getErro())){
-                throw new IllegalArgumentException("CEP não encontrado");
+                throw new CepInvalidoException();
             }
 
             return resposta;
             
+        }catch(CepInvalidoException e){
+            throw e;
         }catch(Exception e){
             throw new RuntimeException("Erro ao consultar API de CEP", e);
         }        

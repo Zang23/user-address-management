@@ -1,6 +1,12 @@
 <div class="container">
+    <div *ngIf="mensagem" [ngClass]="tipo" class="toast">
+        {{ mensagem }}
+    </div>
     <div *ngIf="loading" class="spinner">
-    Carregando...
+        Carregando usuarios...
+    </div>
+    <div *ngIf="!loading && usuarios.length === 0">
+        Nenhum usuário cadastrado.
     </div>
     <h1>Usuários</h1>
 
